@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DebuggerCLI" default="compile" basedir=".">
+  <description>Pav Lab 1</description>
+
+  <!-- Read environment properties first -->
+  <property environment="env" />
+  <!-- Override default property values with an external properties file, 
+             if present, with the user's machine specific configuration.        -->
+  <property file="${user.home}/build.properties"/>
+  <!-- Then read the default configuration properties -->
+  <property file="build.properties"/>
+
+  <property name="javac.encoding" value="UTF-8"/>
+  <property name="java.file.encoding" value="UTF-8"/>
+
+	
+	
+  <property name="src.rel-dir" value="src"/>
+  <property name="build.rel-dir" value="build"/>
+ 
+ 
+
+
+
+  <property name="java.src.rel-dir" value="${src.rel-dir}"/>
+  <property name="classes.build.rel-dir" value="${build.rel-dir}/classes"/>
+
+ 
+
+  <path id="project.classpath">
+    <pathelement location="${classes.build.rel-dir}" />
+  </path>
+
+  <target name="init">
+    <echo message="Creating the classes dir ..."/>
+    <mkdir dir="${classes.build.rel-dir}"/>
+  </target>
+
+ 
+
+  <target name="compile" depends="init">
+    <echo message="Compiling sources..." />
+    <javac destdir="${classes.build.rel-dir}" debug="true" debuglevel="lines,vars,source"
+           optimize="true" deprecation="true" verbose="false" includeantruntime="false">
+      <classpath refid="project.classpath" />
+      <src>
+        <pathelement path="${java.src.rel-dir}"/>
+      </src>
+      <compilerarg line=""/>
+    </javac>
+  </target>
+
+
+
+  <target name="run" depends="compile" description="Runs the program">
+    <java classname="ist.meic.pa.DebuggerCLI" classpath="classes" fork="false">
+      <classpath>
+        <path refid="project.classpath" />
+      </classpath>
+    </java>
+  </target>
+
+  <target name="clean" depends=""
+          description="Cleans the compiled classes">
+    <delete dir="${build.rel-dir}"/>
+  </target>
+
+
+  <target name="print-env-vars" 
+          description="Prints all environment variables" >
+    <propertyset id="environment">
+      <propertyref prefix="env."/>
+    </propertyset>
+    <property name="env_prop" refid="${env.CLASSPATH}"/>
+    <echo>${env_prop}</echo>
+  </target>
+
+</project>

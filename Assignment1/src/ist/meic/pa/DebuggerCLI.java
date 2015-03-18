@@ -3,12 +3,15 @@ package ist.meic.pa;
 import ist.meic.pa.command.Command;
 import ist.meic.pa.command.parser.AbortCommandParser;
 import ist.meic.pa.command.parser.CommandParser;
+import ist.meic.pa.test.TestException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class DebuggerCLI {
-	static Object runningClass = null;
-	static String arguments[] = null;
+	static Class<?> runningClass;
+	static String arguments[];
 	private ArrayList<CommandParser> parsers;
 	
 	/**
@@ -37,15 +40,39 @@ public class DebuggerCLI {
 		return parsedCommand;
 	}
 	
-	public static void main(String[] args) throws Exception {
-		
-		runningClass = args[0];
-		
+	public static void main(String[] args){
+		try{
+			runningClass = Class.forName("ist.meic.pa.test.TestClass");
+		}catch(ClassNotFoundException e){
+			System.out.println("Could not find class: "+e.getMessage());
+		}
 		for(int i=1; i<args.length; i++){
 			arguments[i-1]=args[i];
 		}
-		DebuggerCLI debugger = new DebuggerCLI();
-		Command commmand = debugger.parseCommand(args[1]);
+		/*DebuggerCLI debugger = new DebuggerCLI();
+		Command commmand = debugger.parseCommand(args[1]);*/
+		try { 
+			runningClass.getMethod("main", String[].class).invoke(runningClass, new String[]{ null });		
+		}
+		catch (InvocationTargetException e) { 
+			System.out.println("Ola");
+			try { 
+				throw e.getCause(); 
+			}
+			catch (TestException te) { 
+				
+			}
+			catch(Throwable es){
+				System.out.println("What?");
+			}
+		}
+		catch(NoSuchMethodException e){
+			System.out.println(e.getMessage());
+		}
+		catch(IllegalAccessException e){
+			System.out.println(e.getMessage());
+		}
+		
 	}
   
 }
