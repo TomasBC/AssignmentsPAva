@@ -47,5 +47,5 @@ public class DebuggerCLI {
 		DebuggerCLI debugger = new DebuggerCLI();
 		Command commmand = debugger.parseCommand(args[1]);
 	}
- 
+  
 }
