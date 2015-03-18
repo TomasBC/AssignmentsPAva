@@ -55,14 +55,13 @@ public class DebuggerCLI {
 			runningClass.getMethod("main", String[].class).invoke(runningClass, new String[]{ null });		
 		}
 		catch (InvocationTargetException e) { 
-			System.out.println("Ola");
 			try { 
 				throw e.getCause(); 
 			}
 			catch (TestException te) { 
-				
+				System.out.println("Ola");
 			}
-			catch(Throwable es){
+			catch(Throwable what){
 				System.out.println("What?");
 			}
 		}
