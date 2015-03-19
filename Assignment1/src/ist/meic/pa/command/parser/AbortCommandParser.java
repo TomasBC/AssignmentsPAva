@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class AbortCommandParser extends CommandParser {
 
-	private static Pattern _pattern = Pattern.compile("Abort");
+	private static Pattern pattern = Pattern.compile("Abort");
 	
 	public AbortCommandParser(DebuggerCLI debugger) {
 		super(debugger);
@@ -19,9 +19,9 @@ public class AbortCommandParser extends CommandParser {
 	@Override
 	public Command parseCommand(String line) {
 		Command com = null;
-		Matcher matcher = _pattern.matcher(line);
+		Matcher matcher = pattern.matcher(line);
 		if (matcher.matches())
-			com = new AbortCommand(_debugger);
+			com = new AbortCommand(debugger);
 		return com;
 	}
 

@@ -4,10 +4,10 @@ import ist.meic.pa.DebuggerCLI;
 import ist.meic.pa.command.Command;
 
 public abstract class CommandParser {
-	protected DebuggerCLI _debugger;
+	protected DebuggerCLI debugger;
 	
 	public CommandParser(DebuggerCLI debugger) {
-		_debugger = debugger;
+		this.debugger = debugger;
 	}
 	
 	public abstract Command parseCommand(String line);

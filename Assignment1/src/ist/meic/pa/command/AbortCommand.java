@@ -16,7 +16,7 @@ public class AbortCommand extends Command {
 
 	@Override
 	public void execute() {
-		//getDebugger().removeCurrent();
+		System.exit(1);
 	}
 
 }
