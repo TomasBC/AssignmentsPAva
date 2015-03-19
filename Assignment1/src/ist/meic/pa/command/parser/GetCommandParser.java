@@ -20,9 +20,9 @@ public class GetCommandParser extends CommandParser {
 	@Override
 	public Command parseCommand(String line) {
 		Command com = null;
-		Matcher matcher = pattern.matcher(line);
+		/*Matcher matcher = pattern.matcher(line);
 		if (matcher.matches())
-			com = new GetCommand(debugger, );
+			com = new GetCommand(debugger, );*/
 		return com;
 	}
 

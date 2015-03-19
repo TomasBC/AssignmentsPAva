@@ -19,7 +19,7 @@ public class GetCommand extends Command {
 
 	@Override
 	public void execute() {
-		getDebugger().
+		//getDebugger().
 	}
 
 }

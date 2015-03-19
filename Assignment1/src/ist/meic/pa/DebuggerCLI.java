@@ -74,7 +74,7 @@ public class DebuggerCLI {
 	public static void main(String[] args) throws IOException{
 		DebuggerCLI debugger = new DebuggerCLI();
 		try{
-			debugger.setRunningClass( Class.forName("ist.meic.pa.test.TestClassDoesntThrowException"));
+			debugger.setRunningClass( Class.forName("ist.meic.pa.test.TestClassThrowsException"));
 		}catch(ClassNotFoundException e){
 			System.out.println("Could not find class: "+e.getMessage());
 		}
@@ -113,10 +113,10 @@ public class DebuggerCLI {
 		}
 		
 		String inputLine = debugger.promptUser(">:");
-		Command com = debugger.parseCommand(inputLine);
-		if(com != null && com.canExecute()) {
+		Command commmand = debugger.parseCommand(inputLine);
+		if(commmand != null && commmand.canExecute()) {
 			debugger.setCommandFound(true);
-			com.execute();
+			commmand.execute();
 		}
 		if (!debugger.isCommandFound())
 			System.err.println("No command was executed.");

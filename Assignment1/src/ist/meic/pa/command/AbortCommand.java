@@ -16,6 +16,7 @@ public class AbortCommand extends Command {
 
 	@Override
 	public void execute() {
+		System.out.println("Exited the application");
 		System.exit(1);
 	}
 
