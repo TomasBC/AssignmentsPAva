@@ -24,6 +24,7 @@ public class GetCommandParser extends CommandParser {
 			return null;
 		String fieldName = matcher.group(1);
 		com = new GetCommand(debugger, fieldName);
+
 		return com;
 	}
 
