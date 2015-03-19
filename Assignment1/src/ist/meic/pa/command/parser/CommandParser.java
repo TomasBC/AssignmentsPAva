@@ -5,6 +5,7 @@ import ist.meic.pa.command.Command;
 
 public abstract class CommandParser {
 	protected DebuggerCLI debugger;
+	protected static final String IDENTIFIER = "[\\w]+";
 	
 	public CommandParser(DebuggerCLI debugger) {
 		this.debugger = debugger;
