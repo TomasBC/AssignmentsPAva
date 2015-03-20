@@ -24,10 +24,13 @@ public class GetCommand extends Command {
 	private ArrayList<Field> getPossibleFields() {
 		Object curr = getDebugger().getRunningClass();
 		Class<?> currentClass = curr.getClass();
-			
+
 		while (currentClass != Object.class) {
 			try {
+
 				Field currentField = currentClass.getDeclaredField(fieldName);
+				System.out.println(currentField);
+	
 				possibleFields.add(currentField);
 			} catch (NoSuchFieldException e) {
 				//Do nothing

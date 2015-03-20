@@ -9,7 +9,7 @@ import ist.meic.pa.command.GetCommand;
 
 public class GetCommandParser extends CommandParser {
 	
-	private static Pattern pattern = Pattern.compile("Get+("+IDENTIFIER+")");
+	private static Pattern pattern = Pattern.compile("Get[\\s]+("+IDENTIFIER+")");
 	
 	public GetCommandParser(DebuggerCLI debugger) {
 		super(debugger);
@@ -20,8 +20,10 @@ public class GetCommandParser extends CommandParser {
 	public Command parseCommand(String line) {
 		Command com = null;
 		Matcher matcher = pattern.matcher(line);
-		if (matcher.matches())
+
+		if (!matcher.matches())
 			return null;
+
 		String fieldName = matcher.group(1);
 		com = new GetCommand(debugger, fieldName);
 

@@ -3,6 +3,7 @@ package ist.meic.pa;
 import ist.meic.pa.command.Command;
 import ist.meic.pa.command.parser.AbortCommandParser;
 import ist.meic.pa.command.parser.CommandParser;
+import ist.meic.pa.command.parser.GetCommandParser;
 import ist.meic.pa.test.TestException;
 
 import java.io.BufferedReader;
@@ -37,6 +38,7 @@ public class DebuggerCLI {
 	DebuggerCLI(){
 		parsers = new ArrayList<CommandParser>();
 		parsers.add(new AbortCommandParser(this));
+		parsers.add(new GetCommandParser(this));
 	}
 	
 	/**
