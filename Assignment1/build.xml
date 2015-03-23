@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="DebuggerCLI" default="compile" basedir=".">
-  <description>Pav Lab 1</description>
+  <description>DebuggerCLI Project</description>
 
   <!-- Read environment properties first -->
   <property environment="env" />
@@ -17,18 +17,18 @@
 	
   <property name="src.rel-dir" value="src"/>
   <property name="build.rel-dir" value="build"/>
- 
- 
-
-
 
   <property name="java.src.rel-dir" value="${src.rel-dir}"/>
   <property name="classes.build.rel-dir" value="${build.rel-dir}/classes"/>
 
+  <!-- Source path for JAR files -->
+  <property name="include.rel-dir" value="include"/>
  
 
   <path id="project.classpath">
     <pathelement location="${classes.build.rel-dir}" />
+    <pathelement location="${include.rel-dir}" />
+	<pathelement path="${include.rel-dir}/javassist.jar" />
   </path>
 
   <target name="init">
