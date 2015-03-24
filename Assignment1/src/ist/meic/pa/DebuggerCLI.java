@@ -21,10 +21,10 @@ import javassist.NotFoundException;
 public class DebuggerCLI {
 	private Class<?> runningClass;
 	private String arguments[];
-	private ArrayList<CommandParser> parsers;
+	private static ArrayList<CommandParser> parsers;
 	
 	/** Input stream reader for the Debugger.*/
-	private BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+	static private BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 	
 	/**
 	 *  True if an exception was caught when running the testing class
@@ -52,7 +52,7 @@ public class DebuggerCLI {
 	 * @param line
 	 * @return parsedCommand null
 	 */
-	private Command parseCommand(String line) {
+	public static Command parseCommand(String line) {
 		Command parsedCommand = null;
 		for (CommandParser parser : parsers) {
 			parsedCommand = parser.parseCommand(line);
@@ -74,7 +74,7 @@ public class DebuggerCLI {
 	 * @return line - input from the user
 	 * @throws IOException
 	 */
-	private String promptUser(String message) throws IOException {
+	public static String promptUser(String message) throws IOException {
 		System.err.print(message);
 		String line = in.readLine();
 		return line;
@@ -94,15 +94,16 @@ public class DebuggerCLI {
 		CtClass ctClass = pool.get("ist.meic.pa.test.TestClassThrowsException");
 		CtMethod m = ctClass.getDeclaredMethod("main");
 		CtClass etype = ClassPool.getDefault().get("java.lang.Exception");
-		m.addCatch("{ System.out.println(\"Estou no catch\");"
-				+ "System.out.println($e);"
-				+ "DebuggerCLI.test();"
+		m.addCatch("{ System.err.println(\"Estou no catch\");"
+				+ "System.err.println($e);"
+				+ "String input = DebuggerCLI.promptUser(\"DebuggerCLI>:\");"
+				+ "DebuggerCLI.parseCommand(input);"
 				+ "throw $e; }", etype);
 		ctClass.toClass();
 		debugger.setRunningClass( Class.forName("ist.meic.pa.test.TestClassThrowsException"));
 		Object o =debugger.getRunningClass().newInstance();
 		Method method = o.getClass().getMethod("main", String[].class);
-		method.invoke(o,new String[]{ null });
+		method.invoke(o, new String[]{ null });
 		
 		/*String inputLine = debugger.promptUser(">:");
 		Command commmand = debugger.parseCommand(inputLine);
