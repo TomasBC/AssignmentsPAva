@@ -34,7 +34,7 @@ public class DebuggerCLI {
 	/**
 	 *  True if line received from user is a legal command
 	 */
-	private boolean commandFound = false;
+	private static boolean commandFound = false;
 	
 	/**
 	 * Instantiates the array of parsers and adds ALL the parsers
@@ -91,13 +91,17 @@ public class DebuggerCLI {
 		
 		ClassPool pool = ClassPool.getDefault();
 		pool.importPackage("ist.meic.pa");
+		pool.importPackage("ist.meic.pa.command");
 		CtClass ctClass = pool.get("ist.meic.pa.test.TestClassThrowsException");
 		CtMethod m = ctClass.getDeclaredMethod("main");
 		CtClass etype = ClassPool.getDefault().get("java.lang.Exception");
 		m.addCatch("{ System.err.println(\"Estou no catch\");"
 				+ "System.err.println($e);"
 				+ "String input = DebuggerCLI.promptUser(\"DebuggerCLI>:\");"
-				+ "DebuggerCLI.parseCommand(input);"
+				+ "Command commmand = DebuggerCLI.parseCommand(input);"
+				+ "if(commmand != null && commmand.canExecute()) {"
+				+ 	"DebuggerCLI.setCommandFound(true);"
+				+ 	"commmand.execute(); }"
 				+ "throw $e; }", etype);
 		ctClass.toClass();
 		debugger.setRunningClass( Class.forName("ist.meic.pa.test.TestClassThrowsException"));
@@ -152,7 +156,7 @@ public class DebuggerCLI {
 	}
 
 	public void setParsers(ArrayList<CommandParser> parsers) {
-		this.parsers = parsers;
+		DebuggerCLI.parsers = parsers;
 	}
 
 	public BufferedReader get_in() {
@@ -160,7 +164,7 @@ public class DebuggerCLI {
 	}
 
 	public void set_in(BufferedReader _in) {
-		this.in = _in;
+		DebuggerCLI.in = _in;
 	}
 
 	public boolean isCatchedException() {
@@ -175,8 +179,8 @@ public class DebuggerCLI {
 		return commandFound;
 	}
 
-	public void setCommandFound(boolean commandFound) {
-		this.commandFound = commandFound;
+	public static void setCommandFound(boolean found) {
+		commandFound = found;
 	}
   
 	
