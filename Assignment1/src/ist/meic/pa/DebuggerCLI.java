@@ -40,7 +40,7 @@ public class DebuggerCLI {
 	 * Instantiates the array of parsers and adds ALL the parsers
 	 */
 	DebuggerCLI(){
-		parsers = new ArrayList<CommandParser>();
+		
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public class DebuggerCLI {
 	 * @throws IOException
 	 */
 	public static String promptUser(String message) throws IOException {
-		System.err.print(message);
+		System.out.print(message);
 		String line = in.readLine();
 		return line;
 	}
@@ -85,7 +85,7 @@ public class DebuggerCLI {
 	}
 	
 	public static void main(String[] args) throws IOException, NotFoundException, CannotCompileException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException{
-		DebuggerCLI debugger = new DebuggerCLI();
+		parsers = new ArrayList<CommandParser>();
 		
 		/*for(int i=1; i<args.length; i++){
 			debugger.getArguments()[i-1]=args[i];
@@ -98,9 +98,9 @@ public class DebuggerCLI {
 		CtClass ctClass = pool.get("ist.meic.pa.test.TestClassThrowsException");
 		CtMethod m = ctClass.getDeclaredMethod("main");
 		CtClass etype = ClassPool.getDefault().get("java.lang.Exception");
-		m.addCatch("{ System.err.println(\"Estou no catch\");"
-				+ "System.err.println($e);"
-				+ "DebuggerCLI.addParsers(DebuggerCLI.staticGetRunningClass());"
+		m.addCatch("{ System.out.println(\"Estou no catch\");"
+				+ "System.out.println($e);"
+				+ "DebuggerCLI.addParsers(DebuggerCLI.getRunningClass());"
 				+ "String input = DebuggerCLI.promptUser(\"DebuggerCLI>:\");"
 				+ "Command commmand = DebuggerCLI.parseCommand(input);"
 				+ "if(commmand != null && commmand.canExecute()) {"
@@ -108,8 +108,8 @@ public class DebuggerCLI {
 				+ 	"commmand.execute(); }"
 				+ "throw $e; }", etype);
 		ctClass.toClass();
-		debugger.setRunningClass( Class.forName("ist.meic.pa.test.TestClassThrowsException"));
-		Object o =debugger.getRunningClass().newInstance();
+		DebuggerCLI.setRunningClass( Class.forName("ist.meic.pa.test.TestClassThrowsException"));
+		Object o =DebuggerCLI.getRunningClass().newInstance();
 		Method method = o.getClass().getMethod("main", String[].class);
 		method.invoke(o, new String[]{ null });
 		
@@ -132,21 +132,13 @@ public class DebuggerCLI {
 	
 	
 	
-	
-	
-	
-	
-	
-	static public Class<?> staticGetRunningClass(){
-		return runningClass;
-	}
-	
-	public Class<?> getRunningClass() {
+
+	public static Class<?> getRunningClass() {
 		return runningClass;
 	}
 
-	public void setRunningClass(Class<?> runningClass) {
-		this.runningClass = runningClass;
+	public static void setRunningClass(Class<?> rClass) {
+		runningClass = rClass;
 	}
 
 	public String[] getArguments() {

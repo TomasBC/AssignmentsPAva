@@ -26,7 +26,7 @@ public class GetCommand extends Command {
 			try {
 
 				Field currentField = currentClass.getDeclaredField(fieldName);
-				System.out.println(currentField);
+
 	
 				possibleFields.add(currentField);
 			} catch (NoSuchFieldException e) {
@@ -45,9 +45,12 @@ public class GetCommand extends Command {
 		Field field = possibleFields.get(0);
 		Object value;
 		try {
-			value = field.get(getRunningClass());
-			System.err.println(value.toString());
+			value = field.get(getRunningClass().newInstance());
+			System.out.println(value.toString());
 		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
