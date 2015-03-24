@@ -4,7 +4,6 @@ import ist.meic.pa.command.Command;
 import ist.meic.pa.command.parser.AbortCommandParser;
 import ist.meic.pa.command.parser.CommandParser;
 import ist.meic.pa.command.parser.GetCommandParser;
-import ist.meic.pa.test.TestException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +11,12 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Locale.Category;
+
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.NotFoundException;
 
 public class DebuggerCLI {
 	private Class<?> runningClass;
@@ -59,6 +63,10 @@ public class DebuggerCLI {
 		return parsedCommand;
 	}
 	
+	
+	public static void test(){
+		System.out.println("test()");
+	}
 	/**
 	 * Prints the prompt to receiver the user input after an exception was caught
 	 * 
@@ -73,55 +81,37 @@ public class DebuggerCLI {
 	}
 	
 	
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException, NotFoundException, CannotCompileException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException{
 		DebuggerCLI debugger = new DebuggerCLI();
-		try{
-			debugger.setRunningClass( Class.forName("ist.meic.pa.test.TestClassThrowsException"));
-		}catch(ClassNotFoundException e){
-			System.out.println("Could not find class: "+e.getMessage());
-		}
 		
-		for(int i=1; i<args.length; i++){
+		/*for(int i=1; i<args.length; i++){
 			debugger.getArguments()[i-1]=args[i];
 		}
+		*/
 		
-		try { 
-			debugger.getRunningClass().getMethod("main", String[].class).invoke(debugger.getRunningClass(), new String[]{ null });
-		}
-		catch (InvocationTargetException e) { 
-			debugger.setCatchedException(true);
-			try { 
-				throw e.getCause(); 
-			}
-			catch (TestException te) { 
-				/*
-				 * catches this exception
-				 */
-			}
-			catch(Throwable what){
-				System.out.println("What?");
-			}
-		}
-		catch(NoSuchMethodException e){
-			System.out.println(e.getMessage());
-		}
-		catch(IllegalAccessException e){
-			System.out.println(e.getMessage());
-		}
+		ClassPool pool = ClassPool.getDefault();
+		pool.importPackage("ist.meic.pa");
+		CtClass ctClass = pool.get("ist.meic.pa.test.TestClassThrowsException");
+		CtMethod m = ctClass.getDeclaredMethod("main");
+		CtClass etype = ClassPool.getDefault().get("java.lang.Exception");
+		m.addCatch("{ System.out.println(\"Estou no catch\");"
+				+ "System.out.println($e);"
+				+ "DebuggerCLI.test();"
+				+ "throw $e; }", etype);
+		ctClass.toClass();
+		debugger.setRunningClass( Class.forName("ist.meic.pa.test.TestClassThrowsException"));
+		Object o =debugger.getRunningClass().newInstance();
+		Method method = o.getClass().getMethod("main", String[].class);
+		method.invoke(o,new String[]{ null });
 		
-		if(!debugger.isCatchedException()){
-			System.out.println("No exception was thrown. Class is ok");
-			System.exit(1);
-		}
-		
-		String inputLine = debugger.promptUser(">:");
+		/*String inputLine = debugger.promptUser(">:");
 		Command commmand = debugger.parseCommand(inputLine);
 		if(commmand != null && commmand.canExecute()) {
 			debugger.setCommandFound(true);
 			commmand.execute();
 		}
 		if (!debugger.isCommandFound())
-			System.err.println("No command was executed.");
+			System.err.println("No command was executed.");*/
 	}
 
 	
