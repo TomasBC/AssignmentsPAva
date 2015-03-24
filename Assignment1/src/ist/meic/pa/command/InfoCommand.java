@@ -1,11 +1,9 @@
 package ist.meic.pa.command;
 
-import ist.meic.pa.DebuggerCLI;
-
 public class InfoCommand extends Command {
 
-	InfoCommand(DebuggerCLI debugger) {
-		super(debugger);
+	InfoCommand(Class<?> rClass) {
+		super(rClass);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -1,11 +1,9 @@
 package ist.meic.pa.command;
 
-import ist.meic.pa.DebuggerCLI;
-
 public class RetryCommand extends Command {
 
-	RetryCommand(DebuggerCLI debugger) {
-		super(debugger);
+	RetryCommand(Class<?> rClass) {
+		super(rClass);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -1,11 +1,9 @@
 package ist.meic.pa.command;
 
-import ist.meic.pa.DebuggerCLI;
-
 public class AbortCommand extends Command {
 
-	public AbortCommand(DebuggerCLI debugger) {
-		super(debugger);
+	public AbortCommand(Class<?> rClass) {
+		super(rClass);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -19,7 +19,7 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 
 public class DebuggerCLI {
-	private Class<?> runningClass;
+	private static Class<?> runningClass;
 	private String arguments[];
 	private static ArrayList<CommandParser> parsers;
 	
@@ -41,8 +41,6 @@ public class DebuggerCLI {
 	 */
 	DebuggerCLI(){
 		parsers = new ArrayList<CommandParser>();
-		parsers.add(new AbortCommandParser(this));
-		parsers.add(new GetCommandParser(this));
 	}
 	
 	/**
@@ -81,6 +79,11 @@ public class DebuggerCLI {
 	}
 	
 	
+	public static void addParsers(Class<?> rClass){
+		parsers.add(new AbortCommandParser(rClass));
+		parsers.add(new GetCommandParser(rClass));
+	}
+	
 	public static void main(String[] args) throws IOException, NotFoundException, CannotCompileException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException{
 		DebuggerCLI debugger = new DebuggerCLI();
 		
@@ -97,6 +100,7 @@ public class DebuggerCLI {
 		CtClass etype = ClassPool.getDefault().get("java.lang.Exception");
 		m.addCatch("{ System.err.println(\"Estou no catch\");"
 				+ "System.err.println($e);"
+				+ "DebuggerCLI.addParsers(DebuggerCLI.staticGetRunningClass());"
 				+ "String input = DebuggerCLI.promptUser(\"DebuggerCLI>:\");"
 				+ "Command commmand = DebuggerCLI.parseCommand(input);"
 				+ "if(commmand != null && commmand.canExecute()) {"
@@ -133,7 +137,9 @@ public class DebuggerCLI {
 	
 	
 	
-	
+	static public Class<?> staticGetRunningClass(){
+		return runningClass;
+	}
 	
 	public Class<?> getRunningClass() {
 		return runningClass;
@@ -154,7 +160,7 @@ public class DebuggerCLI {
 	public ArrayList<CommandParser> getParsers() {
 		return parsers;
 	}
-
+	
 	public void setParsers(ArrayList<CommandParser> parsers) {
 		DebuggerCLI.parsers = parsers;
 	}

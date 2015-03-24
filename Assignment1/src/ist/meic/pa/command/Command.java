@@ -1,16 +1,14 @@
 package ist.meic.pa.command;
 
-import ist.meic.pa.DebuggerCLI;
-
 public abstract class Command {
-	private DebuggerCLI _debugger;
+	private Class<?> runningClass;
 	
-	Command(DebuggerCLI debugger) {
-		_debugger = debugger;
+	Command(Class<?> rClass) {
+		runningClass = rClass;
 	}
 	
-	public DebuggerCLI getDebugger() {
-		return _debugger;
+	public Class<?> getRunningClass() {
+		return runningClass;
 	}
 	
 	public abstract boolean canExecute();

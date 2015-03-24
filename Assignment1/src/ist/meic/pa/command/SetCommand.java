@@ -1,11 +1,9 @@
 package ist.meic.pa.command;
 
-import ist.meic.pa.DebuggerCLI;
-
 public class SetCommand extends Command {
 
-	SetCommand(DebuggerCLI debugger) {
-		super(debugger);
+	SetCommand(Class<?> rClass) {
+		super(rClass);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -1,11 +1,9 @@
 package ist.meic.pa.command;
 
-import ist.meic.pa.DebuggerCLI;
-
 public class ReturnCommand extends Command {
 
-	ReturnCommand(DebuggerCLI debugger) {
-		super(debugger);
+	ReturnCommand(Class<?> rClass) {
+		super(rClass);
 		// TODO Auto-generated constructor stub
 	}
 

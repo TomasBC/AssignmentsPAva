@@ -1,6 +1,5 @@
 package ist.meic.pa.command.parser;
 
-import ist.meic.pa.DebuggerCLI;
 import ist.meic.pa.command.AbortCommand;
 import ist.meic.pa.command.Command;
 
@@ -11,8 +10,8 @@ public class AbortCommandParser extends CommandParser {
 
 	private static Pattern pattern = Pattern.compile("Abort");
 	
-	public AbortCommandParser(DebuggerCLI debugger) {
-		super(debugger);
+	public AbortCommandParser(Class<?> rClass) {
+		super(rClass);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -21,7 +20,7 @@ public class AbortCommandParser extends CommandParser {
 		Command com = null;
 		Matcher matcher = pattern.matcher(line);
 		if (matcher.matches())
-			com = new AbortCommand(debugger);
+			com = new AbortCommand(runningClass);
 		return com;
 	}
 

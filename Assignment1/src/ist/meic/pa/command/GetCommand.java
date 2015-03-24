@@ -3,15 +3,13 @@ package ist.meic.pa.command;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-import ist.meic.pa.DebuggerCLI;
-
 public class GetCommand extends Command {
 
 	private String fieldName;
 	private ArrayList<Field> possibleFields = new ArrayList<Field>();
 	
-	public GetCommand(DebuggerCLI debugger, String fieldName) {
-		super(debugger);
+	public GetCommand(Class<?> rClass, String fieldName) {
+		super(rClass);
 		this.fieldName = fieldName;
 		// TODO Auto-generated constructor stub
 	}
@@ -22,8 +20,7 @@ public class GetCommand extends Command {
 	}
 
 	private ArrayList<Field> getPossibleFields() {
-		Object curr = getDebugger().getRunningClass();
-		Class<?> currentClass = curr.getClass();
+		Class<?> currentClass = getRunningClass();
 
 		while (currentClass != Object.class) {
 			try {
@@ -48,7 +45,7 @@ public class GetCommand extends Command {
 		Field field = possibleFields.get(0);
 		Object value;
 		try {
-			value = field.get(getDebugger().getRunningClass());
+			value = field.get(getRunningClass());
 			System.err.println(value.toString());
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block

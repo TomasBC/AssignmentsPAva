@@ -1,14 +1,13 @@
 package ist.meic.pa.command.parser;
 
-import ist.meic.pa.DebuggerCLI;
 import ist.meic.pa.command.Command;
 
 public abstract class CommandParser {
-	protected DebuggerCLI debugger;
+	protected Class<?> runningClass;
 	protected static final String IDENTIFIER = "[\\w]+";
 	
-	public CommandParser(DebuggerCLI debugger) {
-		this.debugger = debugger;
+	public CommandParser(Class<?> rClass) {
+		this.runningClass = rClass;
 	}
 	
 	public abstract Command parseCommand(String line);

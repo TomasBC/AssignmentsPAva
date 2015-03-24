@@ -1,11 +1,9 @@
 package ist.meic.pa.command;
 
-import ist.meic.pa.DebuggerCLI;
-
 public class ThrowCommand extends Command {
 
-	ThrowCommand(DebuggerCLI debugger) {
-		super(debugger);
+	ThrowCommand(Class<?> rClass) {
+		super(rClass);
 		// TODO Auto-generated constructor stub
 	}
 

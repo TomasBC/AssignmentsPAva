@@ -3,7 +3,6 @@ package ist.meic.pa.command.parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ist.meic.pa.DebuggerCLI;
 import ist.meic.pa.command.Command;
 import ist.meic.pa.command.GetCommand;
 
@@ -11,8 +10,8 @@ public class GetCommandParser extends CommandParser {
 	
 	private static Pattern pattern = Pattern.compile("Get[\\s]+("+IDENTIFIER+")");
 	
-	public GetCommandParser(DebuggerCLI debugger) {
-		super(debugger);
+	public GetCommandParser(Class<?> rClass) {
+		super(rClass);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -25,7 +24,7 @@ public class GetCommandParser extends CommandParser {
 			return null;
 
 		String fieldName = matcher.group(1);
-		com = new GetCommand(debugger, fieldName);
+		com = new GetCommand(runningClass, fieldName);
 
 		return com;
 	}

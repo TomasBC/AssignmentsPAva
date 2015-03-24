@@ -1,12 +1,11 @@
 package ist.meic.pa.command.parser;
 
-import ist.meic.pa.DebuggerCLI;
 import ist.meic.pa.command.Command;
 
 public class InfoCommandParser extends CommandParser {
 
-	public InfoCommandParser(DebuggerCLI debugger) {
-		super(debugger);
+	public InfoCommandParser(Class<?> rClass) {
+		super(rClass);
 		// TODO Auto-generated constructor stub
 	}
 
