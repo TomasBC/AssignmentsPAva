@@ -102,12 +102,14 @@ public class DebuggerCLI {
 		CtClass etype = ClassPool.getDefault().get("java.lang.Exception");
 		m.addCatch("{ System.out.println(\"Estou no catch\");"
 				+ "System.out.println($e);"
+				+ "while(true) {"
 				+ "DebuggerCLI.addParsers(DebuggerCLI.getRunningClass());"
 				+ "String input = DebuggerCLI.promptUser(\"DebuggerCLI>:\");"
 				+ "Command commmand = DebuggerCLI.parseCommand(input);"
 				+ "if(commmand != null && commmand.canExecute()) {"
 				+ 	"DebuggerCLI.setCommandFound(true);"
 				+ 	"commmand.execute(); }"
+				+ "}"
 				+ "throw $e; }", etype);
 		ctClass.toClass();
 		DebuggerCLI.setRunningClass( Class.forName("ist.meic.pa.test.TestClassThrowsException"));
