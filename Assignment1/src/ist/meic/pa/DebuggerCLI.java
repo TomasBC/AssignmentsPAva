@@ -4,6 +4,7 @@ import ist.meic.pa.command.Command;
 import ist.meic.pa.command.parser.AbortCommandParser;
 import ist.meic.pa.command.parser.CommandParser;
 import ist.meic.pa.command.parser.GetCommandParser;
+import ist.meic.pa.command.parser.SetCommandParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import javassist.NotFoundException;
 
 public class DebuggerCLI {
 	private static Class<?> runningClass;
-	private String arguments[];
+	private static String arguments[];
 	private static ArrayList<CommandParser> parsers;
 	
 	/** Input stream reader for the Debugger.*/
@@ -82,20 +83,21 @@ public class DebuggerCLI {
 	public static void addParsers(Class<?> rClass){
 		parsers.add(new AbortCommandParser(rClass));
 		parsers.add(new GetCommandParser(rClass));
+		parsers.add(new SetCommandParser(rClass));
 	}
 	
 	public static void main(String[] args) throws IOException, NotFoundException, CannotCompileException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException{
 		parsers = new ArrayList<CommandParser>();
 		
-		/*for(int i=1; i<args.length; i++){
-			debugger.getArguments()[i-1]=args[i];
-		}
-		*/
+		/*for(int i=0; i<args.length; i++){
+			getArguments()[i]=args[i];
+		}*/
+		
 		
 		ClassPool pool = ClassPool.getDefault();
 		pool.importPackage("ist.meic.pa");
 		pool.importPackage("ist.meic.pa.command");
-		CtClass ctClass = pool.get("ist.meic.pa.test.TestClassThrowsException");
+		CtClass ctClass = pool.get(args[0]);
 		CtMethod m = ctClass.getDeclaredMethod("main");
 		CtClass etype = ClassPool.getDefault().get("java.lang.Exception");
 		m.addCatch("{ System.out.println(\"Estou no catch\");"
@@ -141,7 +143,7 @@ public class DebuggerCLI {
 		runningClass = rClass;
 	}
 
-	public String[] getArguments() {
+	public static String[] getArguments() {
 		return arguments;
 	}
 
