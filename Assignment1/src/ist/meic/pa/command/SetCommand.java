@@ -30,19 +30,20 @@ public class SetCommand extends Command {
 	@Override
 	public void execute() {
 		ArrayList<Field> fields = getPossibleFields();
-		assert fields.size() > 0;
 		Field field = fields.get(0);
-		assert assignableFrom(field.getType(), newValue.getClass());
+		Object rClass = null;
+		try {
+			rClass = getRunningClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		field.setAccessible(true);
 		try {
-			field.set(getRunningClass().newInstance(), newValue);
-			field.setAccessible(true);
-			System.out.println(field.get(getRunningClass().newInstance()));
+			field.set(rClass, newValue);
+			System.out.println(field.get(rClass));
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {

@@ -105,10 +105,10 @@ public class DebuggerCLI {
 				+ "while(true) {"
 				+ "DebuggerCLI.addParsers(DebuggerCLI.getRunningClass());"
 				+ "String input = DebuggerCLI.promptUser(\"DebuggerCLI>:\");"
-				+ "Command commmand = DebuggerCLI.parseCommand(input);"
-				+ "if(commmand != null && commmand.canExecute()) {"
+				+ "Command command = DebuggerCLI.parseCommand(input);"
+				+ "if(command != null && command.canExecute()) {"
 				+ 	"DebuggerCLI.setCommandFound(true);"
-				+ 	"commmand.execute(); }"
+				+ 	"command.execute(); }"
 				+ "}"
 				+ "throw $e; }", etype);
 		ctClass.toClass();
