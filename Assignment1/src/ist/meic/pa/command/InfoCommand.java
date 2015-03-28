@@ -14,7 +14,10 @@ public class InfoCommand extends Command {
 
 	@Override
 	public void execute() {
-		System.err.println("> Stack Trace:");
+		// as per java.lang.Object spec.
+		// See: http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#toString%28%29
+		
+		System.err.println("Called Object: " + getRunningClass().getName() + "@" + Integer.toHexString(getRunningClass().hashCode()));
 
 	}
 
