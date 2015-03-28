@@ -9,13 +9,12 @@ public class InfoCommand extends Command {
 
 	@Override
 	public boolean canExecute() {
-		// TODO Auto-generated method stub
-		return false;
+		return true; // Info command is always valid.
 	}
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
+		System.err.println("> Stack Trace:");
 
 	}
 

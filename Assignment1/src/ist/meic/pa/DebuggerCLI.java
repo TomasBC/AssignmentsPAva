@@ -1,10 +1,7 @@
 package ist.meic.pa;
 
 import ist.meic.pa.command.Command;
-import ist.meic.pa.command.parser.AbortCommandParser;
-import ist.meic.pa.command.parser.CommandParser;
-import ist.meic.pa.command.parser.GetCommandParser;
-import ist.meic.pa.command.parser.SetCommandParser;
+import ist.meic.pa.command.parser.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,11 +52,15 @@ public class DebuggerCLI {
 		Command parsedCommand = null;
 		for (CommandParser parser : parsers) {
 			parsedCommand = parser.parseCommand(line);
-			if(parsedCommand != null)
-				break;
+			if(parsedCommand != null) {
+				System.err.println("+ " + parsedCommand.getClass().getName());
+				return parsedCommand;
+			}
 		}
-		System.out.println(parsedCommand.getClass().getName());
-		return parsedCommand;
+		
+		// We got nothing.
+		return null;
+		
 	}
 	
 	
@@ -74,16 +75,18 @@ public class DebuggerCLI {
 	 * @throws IOException
 	 */
 	public static String promptUser(String message) throws IOException {
-		System.out.print(message);
+		System.err.print(message);
 		String line = in.readLine();
 		return line;
 	}
 	
 	
 	public static void addParsers(Class<?> rClass){
+		// Add new parsers here.
 		parsers.add(new AbortCommandParser(rClass));
 		parsers.add(new GetCommandParser(rClass));
 		parsers.add(new SetCommandParser(rClass));
+		parsers.add(new InfoCommandParser(rClass));
 	}
 	
 	public static void main(String[] args) throws IOException, NotFoundException, CannotCompileException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException{
@@ -100,17 +103,22 @@ public class DebuggerCLI {
 		CtClass ctClass = pool.get(args[0]);
 		CtMethod m = ctClass.getDeclaredMethod("main");
 		CtClass etype = ClassPool.getDefault().get("java.lang.Exception");
-		m.addCatch("{ System.out.println(\"Estou no catch\");"
-				+ "System.out.println($e);"
+		m.addCatch("{ System.err.println(\"-- Execution Halted (Exception) --\");"
+				+ "System.err.println($e);"
 				+ "while(true) {"
-				+ "DebuggerCLI.addParsers(DebuggerCLI.getRunningClass());"
-				+ "String input = DebuggerCLI.promptUser(\"DebuggerCLI>:\");"
-				+ "Command command = DebuggerCLI.parseCommand(input);"
-				+ "if(command != null && command.canExecute()) {"
-				+ 	"DebuggerCLI.setCommandFound(true);"
-				+ 	"command.execute(); }"
+				+ 	"DebuggerCLI.addParsers(DebuggerCLI.getRunningClass());"
+				+ 	"String input = DebuggerCLI.promptUser(\"DebuggerCLI>:\");"
+				+	"if(input.equals(\"Continue\")) break;" 							// Break while if command is Continue.
+				+ 	"Command command = DebuggerCLI.parseCommand(input);"
+				+ 	"if(command != null && command.canExecute()) {"
+				+ 		"DebuggerCLI.setCommandFound(true);"
+				+ 		"command.execute();"
+				+ 	"} else {"
+				+  		"System.err.println(\"The command is not recognized.\");"
+				+   "}"
 				+ "}"
-				+ "throw $e; }", etype);
+				+ "throw $e;"
+				+ "}", etype); // Close addCatch
 		ctClass.toClass();
 		DebuggerCLI.setRunningClass( Class.forName("ist.meic.pa.test.TestClassThrowsException"));
 		Object o =DebuggerCLI.getRunningClass().newInstance();
