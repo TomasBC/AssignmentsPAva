@@ -2,7 +2,7 @@ package ist.meic.pa.command;
 
 public class InfoCommand extends Command {
 
-	InfoCommand(Class<?> rClass) {
+	public InfoCommand(Class<?> rClass) {
 		super(rClass);
 		// TODO Auto-generated constructor stub
 	}
